@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Message For You</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffcce6, #e6f2ff);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        h1 {
+            color: #ff66b2;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .instructions {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        
+        .envelope-container {
+            position: relative;
+            width: 200px;
+            height: 150px;
+            margin: 0 auto 30px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .envelope-container:hover {
+            transform: scale(1.05);
+        }
+        
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ff99cc;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+        
+        .envelope:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            border-top: 75px solid #ff66b2;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            transform-origin: top;
+            transition: transform 0.5s ease;
+        }
+        
+        .letter {
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            background-color: white;
+            top: 5%;
+            left: 5%;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease 0.2s;
+            overflow-y: auto;
+            text-align: left;
+        }
+        
+        .letter-content {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .click-text {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            color: #ff66b2;
+            font-weight: bold;
+            font-size: 18px;
+            transition: opacity 0.3s;
+        }
+        
+        .envelope.open {
+            transform: translateY(-20px);
+        }
+        
+        .envelope.open:before {
+            transform: rotateX(180deg);
+        }
+        
+        .envelope.open .letter {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .envelope.open + .click-text {
+            opacity: 0;
+        }
+        
+        .hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff66b2;
+            opacity: 0;
+            transform: rotate(45deg);
+        }
+        
+        .heart:before, .heart:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff66b2;
+            border-radius: 50%;
+        }
+        
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+        
+        .heart:after {
+            top: 0;
+            left: -10px;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>A Special Message For You 💌</h1>
+        <p class="instructions">A friend of yours wants to say something to you. If you want to read that message, click on the envelope below!</p>
+        
+        <div class="envelope-container floating" id="envelopeContainer">
+            <div class="envelope" id="envelope">
+                <div class="letter">
+                    <div class="letter-content">
+                        <p>Hey Cutie, How are you?</p>
+                        <p>I might have some anger issues, lack in style but I still got more brain than you and am a smart one.</p>
+                        <p>You better remember that.</p>
+                        <p>See you... Hehehehehe. 😊</p>
+                    </div>
+                </div>
+            </div>
+            <div class="click-text" id="clickText">Click Me!</div>
+            <div class="hearts" id="hearts"></div>
+        </div>
+    </div>
+    
+    <div class="footer">Made with 💖 for a special friend</div>
+
+    <script>
+        document.getElementById('envelopeContainer').addEventListener('click', function() {
+            const envelope = document.getElementById('envelope');
+            const clickText = document.getElementById('clickText');
+            const hearts = document.getElementById('hearts');
+            
+            // Toggle envelope open/close
+            envelope.classList.toggle('open');
+            
+            // Create floating hearts when envelope is opened
+            if (envelope.classList.contains('open')) {
+                createHearts(hearts);
+            }
+        });
+        
+        function createHearts(container) {
+            // Clear any existing hearts
+            container.innerHTML = '';
+            
+            // Create 10 hearts
+            for (let i = 0; i < 10; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                
+                // Random position
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                
+                heart.style.left = `${left}%`;
+                heart.style.top = `${top}%`;
+                
+                // Random size
+                const size = 10 + Math.random() * 20;
+                heart.style.width = `${size}px`;
+                heart.style.height = `${size}px`;
+                
+                // Random animation
+                const duration = 1 + Math.random() * 2;
+                const delay = Math.random() * 2;
+                
+                heart.style.animation = `
+                    heartFloat ${duration}s ease-in ${delay}s forwards
+                `;
+                
+                container.appendChild(heart);
+            }
+            
+            // Add CSS for heart animation
+            if (!document.getElementById('heartAnimation')) {
+                const style = document.createElement('style');
+                style.id = 'heartAnimation';
+                style.textContent = `
+                    @keyframes heartFloat {
+                        0% {
+                            opacity: 1;
+                            transform: translateY(0) rotate(45deg);
+                        }
+                        100% {
+                            opacity: 0;
+                            transform: translateY(-100px) rotate(45deg);
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+    </script>
+</body>
+</html>
